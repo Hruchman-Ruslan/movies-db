@@ -6,10 +6,10 @@ import { Provider } from "react-redux";
 
 import App from "./App.tsx";
 import About from "./page/About.tsx";
-import Movies from "./page/Movies.tsx";
+import Movies from "./page/Movies/Movies.tsx";
 import store from "./redux/store.ts";
 
-import "./index.css";
+import "./index.scss";
 
 const router = createBrowserRouter(
   [
