@@ -30,8 +30,13 @@ const initialState: MoviesState = {
   ],
 };
 
-const moviesReducer: Reducer<MoviesState, Action> = (state, action) => {
-  return initialState;
+// const moviesReducer: Reducer<MoviesState, Action> = (state, action) => {
+//   return initialState;
+// };
+
+// fix deploy
+const moviesReducer: Reducer<MoviesState, Action> = (state = initialState) => {
+  return state;
 };
 
 export default moviesReducer;
