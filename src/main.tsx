@@ -8,22 +8,25 @@ import "./index.css";
 import About from "./page/About.tsx";
 import Movies from "./page/Movies.tsx";
 
-const router = createBrowserRouter([
-  {
-    path: "/movies-db/",
-    element: <App />,
-    children: [
-      {
-        path: "/movies-db/about",
-        element: <About />,
-      },
-      {
-        path: "/movies-db/movies",
-        element: <Movies />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          path: "/about",
+          element: <About />,
+        },
+        {
+          path: "/movies",
+          element: <Movies />,
+        },
+      ],
+    },
+  ],
+  { basename: "/movies-db/" }
+);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
