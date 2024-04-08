@@ -1,9 +1,10 @@
 import { connect } from "react-redux";
-import { Movie } from "../redux/reducers/movies";
-import { RootState } from "../redux/store";
+import { Movie } from "../../redux/reducers/movies";
+import { RootState } from "../../redux/store";
 
-import MovieCard from "../components/MovieCard/MovieCard";
-import "../components/MovieCard/Movies.css";
+import MovieCard from "../../components/MovieCard/MovieCard";
+
+import styles from "./Movies.module.scss";
 
 interface MoviesProps {
   movies: Movie[];
@@ -12,7 +13,7 @@ interface MoviesProps {
 function Movies({ movies }: MoviesProps) {
   return (
     <section>
-      <div className="Movies-list">
+      <div className={styles.list}>
         {movies.map((m) => (
           <MovieCard
             key={m.id}
