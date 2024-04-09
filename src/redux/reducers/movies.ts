@@ -1,42 +1,69 @@
-import { Action, Reducer } from "redux";
+// import { Reducer } from "redux";
+import { ActionWithPayload, createReducer } from "../utils";
 
 export interface Movie {
   id: number;
   title: string;
   popularity: number;
   overview: string;
+  image?: string;
 }
 
-interface MoviesState {
+interface MovieState {
   top: Movie[];
+  loading: boolean;
 }
 
-const initialState: MoviesState = {
-  top: [
-    { id: 1, title: "Inception", popularity: 90, overview: "Dreams..." },
-    { id: 2, title: "The Godfather", popularity: 95, overview: "Godfather..." },
-    {
-      id: 3,
-      title: "The Dart Knight",
-      popularity: 98.5,
-      overview: "Batman...",
-    },
-    {
-      id: 4,
-      title: "The Godfather Part II",
-      popularity: 94,
-      overview: "Part II...",
-    },
-  ],
+const initialState: MovieState = {
+  top: [],
+  loading: false,
 };
 
-// const moviesReducer: Reducer<MoviesState, Action> = (state, action) => {
-//   return initialState;
+export const moviesLoaded = (movies: Movie[]) => ({
+  type: "movies/loaded",
+  payload: movies,
+});
+
+export const moviesLoading = () => ({
+  type: "movies/loading",
+});
+
+const movieReducer = createReducer<MovieState, ActionWithPayload<Movie[]>>(
+  initialState,
+  {
+    "movies/loaded": (state, action: ActionWithPayload<Movie[]>) => {
+      return {
+        ...state,
+        top: action.payload,
+        loading: false,
+      };
+    },
+    "movies/loading": (state) => {
+      return {
+        ...state,
+        loading: true,
+      };
+    },
+  }
+);
+
+// const moviesReducer: Reducer<MovieState, ActionWithPayload<Movie[]>> = (
+//   state,
+//   action
+// ) => {
+//   const currentState = state ?? initialState;
+
+//   switch (action.type) {
+//     case "movies/loaded":
+//       return {
+//         ...currentState,
+//         top: action.payload,
+//       };
+
+//     default:
+//       return currentState;
+//   }
 // };
 
-// fix deploy
-const moviesReducer: Reducer<MoviesState, Action> = (state = initialState) => {
-  return state;
-};
-
-export default moviesReducer;
+// export default moviesReducer;
+export default movieReducer;
