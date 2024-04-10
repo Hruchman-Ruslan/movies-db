@@ -4,15 +4,15 @@ export interface ActionWithPayload<T> extends Action {
   payload: T;
 }
 
-type ACtionHandlers<S, A extends Action> = {
-  [key: string]: (state: S, action: A) => S;
+type ACtionHandlers<S> = {
+  [key: string]: (state: S, action: any) => S;
 };
 
-export function createReducer<TState, TAction extends Action>(
+export function createReducer<TState>(
   initialState: TState,
-  handlers: ACtionHandlers<TState, TAction>
+  handlers: ACtionHandlers<TState>
 ) {
-  return function (state: TState, action: TAction) {
+  return function (state: TState, action: Action) {
     // state = state ?? initialState;
 
     //   same below
