@@ -5,6 +5,8 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { teal } from "@mui/material/colors";
 
 import { AppHeader } from "./components";
+import { AuthContext, AuthInfo, anonymousUser } from "./context";
+import { useState } from "react";
 
 const defaultTheme = createTheme({
   palette: {
@@ -15,14 +17,27 @@ const defaultTheme = createTheme({
   },
 });
 
+const fakeAuth: AuthInfo = {
+  user: {
+    name: "Ruslan",
+  },
+};
+
 function App() {
+  const [auth, setAuth] = useState<AuthInfo>({ user: anonymousUser });
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <AppHeader />
-      <main>
-        <Outlet />
-      </main>
+      <AuthContext.Provider value={auth}>
+        <AppHeader
+          onLogIn={() => setAuth(fakeAuth)}
+          onLogout={() => setAuth({ user: anonymousUser })}
+        />
+        <main>
+          <Outlet />
+        </main>
+      </AuthContext.Provider>
     </ThemeProvider>
   );
 }

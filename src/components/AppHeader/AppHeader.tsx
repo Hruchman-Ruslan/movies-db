@@ -1,9 +1,15 @@
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { LiveTvOutlined } from "@mui/icons-material";
+import { AuthContext, anonymousUser } from "../../context";
 
-export function AppHeader() {
+interface AuthHeaderProps {
+  onLogIn(): void;
+  onLogout(): void;
+}
+
+export function AppHeader({ onLogIn, onLogout }: AuthHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -18,21 +24,31 @@ export function AppHeader() {
             <HeaderLink to="/about">About</HeaderLink>
           </nav>
         </Box>
-        <AuthSection />
+        <AuthSection onLogIn={onLogIn} onLogout={onLogout} />
       </Toolbar>
     </AppBar>
   );
 }
 
-function AuthSection() {
-  const loggedIn = true;
-  const userName = "Ruslan";
+interface AuthSectionProps {
+  onLogIn(): void;
+  onLogout(): void;
+}
+
+function AuthSection({ onLogIn, onLogout }: AuthSectionProps) {
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== anonymousUser;
 
   if (loggedIn) {
     return (
       <>
-        <Typography>Hello, {userName}!</Typography>
-        <Button color="inherit" variant="outlined" sx={{ ml: 1.5 }}>
+        <Typography>Hello, {user.name}!</Typography>
+        <Button
+          color="inherit"
+          variant="outlined"
+          sx={{ ml: 1.5 }}
+          onClick={onLogout}
+        >
           Log out
         </Button>
       </>
@@ -40,7 +56,7 @@ function AuthSection() {
   }
 
   return (
-    <Button color="inherit" variant="outlined">
+    <Button color="inherit" variant="outlined" onClick={onLogIn}>
       Log in
     </Button>
   );

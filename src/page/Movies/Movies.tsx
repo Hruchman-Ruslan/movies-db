@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import { Container, Grid, LinearProgress, Typography } from "@mui/material";
 
@@ -6,13 +6,15 @@ import { fetchMovies } from "../../redux/reducers/movies";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 
 import { MovieCard } from "../../components";
+import { AuthContext, anonymousUser } from "../../context";
 
 export default function Movies() {
   const dispatch = useAppDispatch();
   const movies = useAppSelector((state) => state.movies.top);
   const loading = useAppSelector((state) => state.movies.loading);
 
-  const loggedIn = true;
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== anonymousUser;
 
   useEffect(() => {
     dispatch(fetchMovies());

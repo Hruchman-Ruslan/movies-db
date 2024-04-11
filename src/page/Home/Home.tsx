@@ -1,6 +1,8 @@
 import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { useContext } from "react";
+import { AuthContext, anonymousUser } from "../../context";
 
 function Copyright() {
   return (
@@ -11,10 +13,10 @@ function Copyright() {
 }
 
 export default function Home() {
-  const loggedIn = true;
-  const userName = "Ruslan";
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== anonymousUser;
   const greeting = loggedIn
-    ? `${userName} Explore movies with us`
+    ? `${user.name} Explore movies with us`
     : "Explore movies with u";
 
   return (
