@@ -1,6 +1,8 @@
 import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { useContext } from "react";
+import { AuthContext, anonymousUser } from "../../context";
 
 function Copyright() {
   return (
@@ -11,6 +13,12 @@ function Copyright() {
 }
 
 export default function Home() {
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== anonymousUser;
+  const greeting = loggedIn
+    ? `${user.name} Explore movies with us`
+    : "Explore movies with u";
+
   return (
     <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}>
       <Container maxWidth="sm">
@@ -29,7 +37,7 @@ export default function Home() {
           color="text.secondary"
           paragraph
         >
-          Explore movies with us
+          {greeting}
         </Typography>
         <Stack
           sx={{ pt: 4 }}

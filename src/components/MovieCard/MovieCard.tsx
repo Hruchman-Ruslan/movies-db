@@ -6,8 +6,12 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
+
+import { Favorite } from "@mui/icons-material";
 
 export interface MovieCardProps {
   id: number;
@@ -15,13 +19,15 @@ export interface MovieCardProps {
   popularity: number;
   overview: string;
   image?: string;
+  enableUserActions?: boolean;
 }
 
-export default function MovieCard({
+export function MovieCard({
   id,
   overview,
   popularity,
   title,
+  enableUserActions,
   image = "./public/movie-thumb.png",
 }: MovieCardProps) {
   return (
@@ -42,6 +48,13 @@ export default function MovieCard({
         <Button component={RouterLink} to={`/movies/${id}`} color="secondary">
           Details
         </Button>
+        {enableUserActions && (
+          <Tooltip title="Add to favorites">
+            <IconButton>
+              <Favorite />
+            </IconButton>
+          </Tooltip>
+        )}
       </CardActions>
     </Card>
   );
