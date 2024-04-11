@@ -11,6 +11,12 @@ function Copyright() {
 }
 
 export default function Home() {
+  const loggedIn = true;
+  const userName = "Ruslan";
+  const greeting = loggedIn
+    ? `${userName} Explore movies with us`
+    : "Explore movies with u";
+
   return (
     <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}>
       <Container maxWidth="sm">
@@ -29,7 +35,7 @@ export default function Home() {
           color="text.secondary"
           paragraph
         >
-          Explore movies with us
+          {greeting}
         </Typography>
         <Stack
           sx={{ pt: 4 }}

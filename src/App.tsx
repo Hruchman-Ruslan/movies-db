@@ -1,32 +1,10 @@
-import { ReactNode } from "react";
+import { Outlet } from "react-router-dom";
 
-import { Link as RouterLink, Outlet } from "react-router-dom";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
-import {
-  AppBar,
-  CssBaseline,
-  Link,
-  ThemeProvider,
-  Toolbar,
-  Typography,
-  createTheme,
-} from "@mui/material";
-import { LiveTvOutlined } from "@mui/icons-material";
 import { teal } from "@mui/material/colors";
 
-function HeaderLink({ children, to }: { children: ReactNode; to: string }) {
-  return (
-    <Link
-      component={RouterLink}
-      variant="button"
-      color="inherit"
-      sx={{ my: 1, mx: 1.5 }}
-      to={to}
-    >
-      {children}
-    </Link>
-  );
-}
+import { AppHeader } from "./components";
 
 const defaultTheme = createTheme({
   palette: {
@@ -41,19 +19,7 @@ function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <AppBar>
-        <Toolbar>
-          <LiveTvOutlined sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            The Movies DB
-          </Typography>
-          <nav>
-            <HeaderLink to="/">Home</HeaderLink>
-            <HeaderLink to="/movies">Movies</HeaderLink>
-            <HeaderLink to="/about">About</HeaderLink>
-          </nav>
-        </Toolbar>
-      </AppBar>
+      <AppHeader />
       <main>
         <Outlet />
       </main>
