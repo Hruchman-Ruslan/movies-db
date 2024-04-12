@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, PropsWithChildren } from "react";
+import { Component, PropsWithChildren } from "react";
 
 export class ErrorBoundary extends Component<PropsWithChildren<any>> {
   state: { hasError: boolean };
@@ -8,11 +8,11 @@ export class ErrorBoundary extends Component<PropsWithChildren<any>> {
     this.state = { hasError: false };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  componentDidCatch(error: Error): void {
     alert(error);
   }
 
-  static getDeriverStateFromError() {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
