@@ -13,14 +13,17 @@ import App from "./App.tsx";
 
 import Home from "./page/Home/Home.tsx";
 import Movies from "./page/Movies/Movies.tsx";
-import About from "./page/About.tsx";
+import About from "./page/About/About.tsx";
 
 import store from "./redux/store.ts";
+import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary.tsx";
 
 function AppEntrypoint() {
   return (
     <Provider store={store}>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </Provider>
   );
 }
@@ -36,12 +39,12 @@ const router = createBrowserRouter(
           element: <Home />,
         },
         {
-          path: "/about",
-          element: <About />,
-        },
-        {
           path: "/movies",
           element: <Movies />,
+        },
+        {
+          path: "/about",
+          element: <About />,
         },
       ],
     },
