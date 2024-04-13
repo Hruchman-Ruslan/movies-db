@@ -3,7 +3,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -12,11 +12,14 @@ import { Provider } from "react-redux";
 import App from "./App.tsx";
 
 import Home from "./page/Home/Home.tsx";
-import Movies from "./page/Movies/Movies.tsx";
+// import Movies from "./page/Movies/Movies.tsx";
 import About from "./page/About/About.tsx";
+
+const Movies = lazy(() => import("./page/Movies/Movies.tsx"));
 
 import store from "./redux/store.ts";
 import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary.tsx";
+import { LinearProgress } from "@mui/material";
 
 function AppEntrypoint() {
   return (
@@ -40,7 +43,11 @@ const router = createBrowserRouter(
         },
         {
           path: "/movies",
-          element: <Movies />,
+          element: (
+            <Suspense fallback={<LinearProgress sx={{ mt: 1 }} />}>
+              <Movies />
+            </Suspense>
+          ),
         },
         {
           path: "/about",
