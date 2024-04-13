@@ -28,7 +28,7 @@ export function MovieCard({
   popularity,
   title,
   enableUserActions,
-  image = "./public/movie-thumb.png",
+  image = "/movie-thumb.png",
 }: MovieCardProps) {
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
