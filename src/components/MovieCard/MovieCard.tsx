@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 import { Favorite } from "@mui/icons-material";
+import { memo } from "react";
 
 export interface MovieCardProps {
   id: number;
@@ -20,16 +21,20 @@ export interface MovieCardProps {
   overview: string;
   image?: string;
   enableUserActions?: boolean;
+  onAddFavorite?(id: number): void;
 }
 
-export function MovieCard({
+function MovieCard({
   id,
   overview,
   popularity,
   title,
   enableUserActions,
+  onAddFavorite,
   image = "/movie-thumb.png",
 }: MovieCardProps) {
+  console.count("MovieCard");
+
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardMedia component="div" image={image} sx={{ pt: "56.25%" }} />
@@ -50,7 +55,7 @@ export function MovieCard({
         </Button>
         {enableUserActions && (
           <Tooltip title="Add to favorites">
-            <IconButton>
+            <IconButton onClick={() => onAddFavorite?.(id)}>
               <Favorite />
             </IconButton>
           </Tooltip>
@@ -59,3 +64,5 @@ export function MovieCard({
     </Card>
   );
 }
+
+export default memo(MovieCard);

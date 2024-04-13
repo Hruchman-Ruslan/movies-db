@@ -1,13 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { Container, Grid, LinearProgress, Typography } from "@mui/material";
 
 import { fetchNextPage, resetMovies } from "../../redux/reducers/moviesSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/useRedux";
 
-import { Filters, MovieCard, MoviesFilter } from "../../components";
+import { Filters, MoviesFilter } from "../../components";
 import { AuthContext, anonymousUser } from "../../context";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+
+import MovieCard from "../../components/MovieCard/MovieCard";
 
 export default function Movies() {
   const dispatch = useAppDispatch();
@@ -38,6 +40,15 @@ export default function Movies() {
     }
   }, [dispatch, entry?.isIntersecting, hasMorePages, filters]);
 
+  const handleAddFavorite = useCallback(
+    (id: number) => {
+      alert(
+        `Not implemented! Action: ${user.name} is adding to movie ${id} to favorites.`
+      );
+    },
+    [user.name]
+  );
+
   return (
     <Grid container spacing={2} sx={{ flexWrap: "nowrap" }}>
       <Grid item xs="auto">
@@ -56,8 +67,8 @@ export default function Movies() {
             </Typography>
           )}
           <Grid container spacing={4}>
-            {movies.map((m) => (
-              <Grid item key={m.id} xs={12} sm={6} md={4}>
+            {movies.map((m, i) => (
+              <Grid item key={`${m.id}-${i}`} xs={12} sm={6} md={4}>
                 <MovieCard
                   key={m.id}
                   id={m.id}
@@ -66,6 +77,7 @@ export default function Movies() {
                   popularity={m.popularity}
                   image={m.image}
                   enableUserActions={loggedIn}
+                  onAddFavorite={handleAddFavorite}
                 />
               </Grid>
             ))}
