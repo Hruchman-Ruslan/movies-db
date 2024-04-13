@@ -1,6 +1,7 @@
-import { client } from "../../api/tmdb";
+import { MoviesFilters, client } from "../../api/tmdb";
 import { AppThunk } from "../store";
 import { ActionWithPayload, createReducer } from "../utils";
+import { genres } from "../../api/genres";
 
 export interface Movie {
   id: number;
@@ -10,63 +11,85 @@ export interface Movie {
   image?: string;
 }
 
-interface MovieState {
-  top: Movie[];
-  loading: boolean;
-  page: number;
-  hasMorePages: boolean;
+export interface Genre {
+  id: number;
+  name: string;
 }
 
-const initialState: MovieState = {
+interface MoviesState {
+  loading: boolean;
+  top: Movie[];
+  page: number;
+  hasMorePages: boolean;
+  genres: Genre[];
+}
+
+const initialState: MoviesState = {
   top: [],
   loading: false,
   page: 0,
   hasMorePages: true,
+  genres,
 };
 
-const moviesLoaded = (
-  movies: Movie[],
-  page: number,
-  hasMorePages: boolean
-) => ({
-  type: "movies/loaded",
-  payload: { movies, page, hasMorePages },
-});
-
-const moviesLoading = () => ({
-  type: "movies/loading",
-});
-
-export const fetchNextPage = (): AppThunk<Promise<void>> => {
-  return async (dispatch, getState) => {
-    const nextPage = getState().movies.page + 1;
-    dispatch(fetchPage(nextPage));
-  };
-};
-
-function fetchPage(page: number): AppThunk<Promise<void>> {
-  return async (dispatch) => {
-    dispatch(moviesLoading());
-
-    const config = await client.getConfiguration();
-    const imageUrl = config.images.base_url;
-    const nowPlaying = await client.getNowPlaying(page);
-
-    const mappedResults: Movie[] = nowPlaying.results.map((m) => ({
-      id: m.id,
-      title: m.title,
-      overview: m.overview,
-      popularity: m.popularity,
-      image: m.backdrop_path ? `${imageUrl}w780${m.backdrop_path}` : undefined,
-    }));
-
-    const hasMorePages = nowPlaying.page < nowPlaying.totalPages;
-
-    dispatch(moviesLoaded(mappedResults, page, hasMorePages));
+function loading() {
+  return {
+    type: "movies/loading",
   };
 }
 
-const movieReducer = createReducer<MovieState>(initialState, {
+function loaded(movies: Movie[], page: number, hasMorePages: boolean) {
+  return {
+    type: "movies/loaded",
+    payload: { movies, page, hasMorePages },
+  };
+}
+
+export function resetMovies() {
+  return {
+    type: "movies/reset",
+  };
+}
+
+export const fetchNextPage = (
+  filters: MoviesFilters = {}
+): AppThunk<Promise<void>> => {
+  return async (dispatch, getState) => {
+    const nextPage = getState().movies.page + 1;
+    dispatch(fetchPage(nextPage, filters));
+  };
+};
+
+function fetchPage(
+  page: number,
+  filters: MoviesFilters
+): AppThunk<Promise<void>> {
+  return async (dispatch) => {
+    dispatch(loading());
+
+    const configuration = await client.getConfiguration();
+    const moviesResponse = await client.getMovies(page, filters);
+    const imageSize = "w780";
+    const movies: Movie[] = moviesResponse.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      overview: movie.overview,
+      popularity: movie.popularity,
+      image: movie.backdrop_path
+        ? `${configuration.images.base_url}${imageSize}${movie.backdrop_path}`
+        : undefined,
+    }));
+
+    const hasMorePages = moviesResponse.page < moviesResponse.totalPages;
+
+    dispatch(loaded(movies, page, hasMorePages));
+  };
+}
+
+const moviesReducer = createReducer<MoviesState>(initialState, {
+  "movies/loading": (state) => {
+    return { ...state, loading: true };
+  },
   "movies/loaded": (
     state,
     action: ActionWithPayload<{
@@ -83,31 +106,9 @@ const movieReducer = createReducer<MovieState>(initialState, {
       loading: false,
     };
   },
-  "movies/loading": (state) => {
-    return {
-      ...state,
-      loading: true,
-    };
+  "movies/reset": () => {
+    return { ...initialState };
   },
 });
 
-// const moviesReducer: Reducer<MovieState, ActionWithPayload<Movie[]>> = (
-//   state,
-//   action
-// ) => {
-//   const currentState = state ?? initialState;
-
-//   switch (action.type) {
-//     case "movies/loaded":
-//       return {
-//         ...currentState,
-//         top: action.payload,
-//       };
-
-//     default:
-//       return currentState;
-//   }
-// };
-
-// export default moviesReducer;
-export default movieReducer;
+export default moviesReducer;
