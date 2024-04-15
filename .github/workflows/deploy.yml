@@ -39,6 +39,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env: ${{ secrets.VITE_API_TOKEN }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
