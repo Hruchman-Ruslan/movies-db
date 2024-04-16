@@ -8,6 +8,7 @@ import ReactDOM from "react-dom/client";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { LinearProgress } from "@mui/material";
 
 import App from "./App.tsx";
 
@@ -15,20 +16,26 @@ import Home from "./page/Home/Home.tsx";
 // import Movies from "./page/Movies/Movies.tsx";
 import About from "./page/About/About.tsx";
 import Extra from "./page/Extra/Extra.tsx";
+import AuthCallback from "./page/AuthCallback/AuthCallback.tsx";
+import Profile from "./page/Profile/Profile.tsx";
+import Protected from "./page/Protected/Protected.tsx";
 
 const Movies = lazy(() => import("./page/Movies/Movies.tsx"));
 
 import store from "./redux/store.ts";
 import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary.tsx";
-import { LinearProgress } from "@mui/material";
+import { StateFullAuthProvider } from "./components/index.ts";
+import AuthenticationGuard from "./components/AuthenticationGuard/AuthenticationGuard.tsx";
 
 function AppEntrypoint() {
   return (
-    <Provider store={store}>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </Provider>
+    <StateFullAuthProvider>
+      <Provider store={store}>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </Provider>
+    </StateFullAuthProvider>
   );
 }
 
@@ -43,7 +50,7 @@ const router = createBrowserRouter(
           element: <Home />,
         },
         {
-          path: "/movies",
+          path: "movies",
           element: (
             <Suspense fallback={<LinearProgress sx={{ mt: 1 }} />}>
               <Movies />
@@ -51,12 +58,24 @@ const router = createBrowserRouter(
           ),
         },
         {
-          path: "/extra",
+          path: "extra",
           element: <Extra />,
         },
         {
-          path: "/about",
+          path: "profile",
+          element: <AuthenticationGuard component={Profile} />,
+        },
+        {
+          path: "protected",
+          element: <AuthenticationGuard component={Protected} />,
+        },
+        {
+          path: "about",
           element: <About />,
+        },
+        {
+          path: "callback",
+          element: <AuthCallback />,
         },
       ],
     },
