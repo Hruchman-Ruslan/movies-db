@@ -13,7 +13,6 @@ import { LinearProgress } from "@mui/material";
 import App from "./App.tsx";
 
 import Home from "./page/Home/Home.tsx";
-// import Movies from "./page/Movies/Movies.tsx";
 import About from "./page/About/About.tsx";
 import Extra from "./page/Extra/Extra.tsx";
 import AuthCallback from "./page/AuthCallback/AuthCallback.tsx";
